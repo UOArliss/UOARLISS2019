@@ -4,7 +4,7 @@
 
 
 int unsigned const delayUs = 2000000;
-
+/*
 int main(void){
 
     rpiServo servo;
@@ -56,3 +56,4 @@ int main(void){
     usleep(delayUs);
     return 0;
 }
+*/
