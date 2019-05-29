@@ -1,11 +1,10 @@
 #include "pid.h"
-#include <stdio>
-#include <wiringPi.h>
+#include <stdio.h>
 
 PID::PID(double p , double i, double d, double sp) : proportion(0), integral(0) , derivative(0) , prev_error(0) 
 , kp(p), ki(i), kd(d), setpoint(sp){
 
-	this->prev_time = NULL;
+	int res = gettimeofday(&(this->prev_time) , NULL);
 }
 
 
@@ -16,30 +15,19 @@ int PID::ComputePID(PID* p){
 	/*calculate time*/
 	double error = p->setpoint - p->in;
 
-	/*check if struct is not NULL*/
-	if ( p->prev_time){
-				/*calculate the current time */
-		struct timeval dtime;
-		int res = gettimeofday(&dtime , NULL);
-				/*find the difference and save to prev time*/
-		#ifndef DEBUG
-			if (res < 0)
-				puts("Error in gettimeofday function");
-		#endif
-		struct timeval results;
-		(void)TimevalSubtract(&results, &dtime , &(this->prev_time));
-
-		long int delta = results.tv_usec;
-		p->integral += error * delta;
-		p->derivative = (error - p->prev_error) / delta;
-		
-	} else {
-		int res = gettimeofday(&(p->prev_time) , NULL);
-		#ifndef DEBUG
-			if (res < 0)
-				puts("Error in gettimeofday function");
-		#endif
-	}
+	/*calculate the current time */
+	struct timeval dtime;
+	int res = gettimeofday(&dtime , NULL);
+			/*find the difference and save to prev time*/
+	#ifndef DEBUG
+		if (res < 0)
+			puts("Error in gettimeofday function");
+	#endif
+	struct timeval results;
+	(void)TimevalSubtract(&results, &dtime , &(this->prev_time));
+	long int delta = results.tv_usec;
+	p->integral += error * delta;
+	p->derivative = (error - p->prev_error) / delta;
 
 	/*we have computed all time based functions*/
 	p->prev_error = error;
