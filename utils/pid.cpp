@@ -25,7 +25,7 @@ int PID::ComputePID(PID* p){
 	#endif
 	struct timeval results;
 	(void)TimevalSubtract(&results, &dtime , &(this->prev_time));
-	long int delta = results.tv_usec;
+	long int delta = results.tv_usec / 1000; /*convert to ms*/
 	p->integral += error * delta;
 	p->derivative = (error - p->prev_error) / delta;
 

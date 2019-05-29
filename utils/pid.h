@@ -20,6 +20,7 @@ public:
 	PID(double p , double i, double d, double sp);
 	/* right now no error checking is done, but later should change to return error and use int as lookup*/
 	int ComputePID(PID* p);
+	void Update(double i){this->in = i;}
 
 private:
 	/*timeval struct used from calculating inegral error*/
